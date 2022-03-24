@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.container #task-list-container {
+  flex-grow: 1;
+}
+
+.container #task-list-container #tool-bar {
+  /* flex-grow: 1; */
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(221, 221, 221);
+  border-radius: 5px;
+  margin-inline: 5px;
+  padding: 5px;
+}
+
+.container #task-list-container #tool-bar .sort-section {
+  display: flex;
+  align-items: center;
+}
+
+.container #task-list-container #task-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  height: 65vh;
+  overflow: auto;
+  padding: 10px;
+  justify-content: space-around;
+}
+
+.container #task-list-container #task-list mat-card {
+  padding: 5px;
+  max-width: 300px;
+  min-width: 250px;
+  margin-bottom: 5px;
+  background-color: rgb(226, 241, 136);
+}
+
+.container #task-list-container #task-list mat-card mat-card-title {
+  font-size: 12px;
+}
+
+.container #task-list-container #task-list mat-card mat-card-subtitle {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.container #task-list-container #task-list mat-card mat-card-subtitle mat-icon {
+  font-size: 18px;
+}
+
+.container #task-list-container #task-list mat-card mat-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+::ng-deep .mat-form-field-wrapper{
+  margin-bottom: -1.25em;
+}
+
+span {
+  font-size: 10px;
+  font-weight: bold;
+}

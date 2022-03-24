@@ -1,0 +1,23 @@
+#pending-container {
+  width: 300px;
+  text-align: center;
+}
+
+#pending-container #pending-tasks {
+  height: 70vh;
+  overflow: auto;
+  padding: 10px;
+}
+
+#pending-container #pending-tasks mat-card {
+  margin-bottom: 5px;
+  padding: 5px;
+  display: flex;
+}
+
+#pending-container #pending-tasks mat-card mat-card-subtitle {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: auto;
+}
