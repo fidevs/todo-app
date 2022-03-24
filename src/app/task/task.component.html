@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-title>{{ task.desc }}</mat-card-title>
+  <mat-card-subtitle>
+    <div class="estimated">
+      <mat-icon>watch_later</mat-icon>{{ task.duration }}m
+    </div>
+    <div class="time-delay" *ngIf="task.status === 'COMPLETED'">
+      <mat-icon>sports_score</mat-icon>
+      <span>{{ task.finalDate }}</span> ({{ task.delay }}m)
+    </div>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <button mat-icon-button style="color: red" matTooltip="Borrar">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button
+      *ngIf="task.status === 'PENDING'"
+      mat-icon-button
+      matTooltip="Editar"
+    >
+      <mat-icon>edit_calendar</mat-icon>
+    </button>
+    <button
+      *ngIf="task.status === 'PENDING'"
+      mat-icon-button
+      style="color: green"
+      matTooltip="Iniciar"
+    >
+      <mat-icon>start</mat-icon>
+    </button>
+    <mat-icon
+      *ngIf="task.status === 'COMPLETED'"
+      style="color: rgb(39, 112, 155)"
+      matTooltip="Completada"
+    >
+      assignment_turned_in
+    </mat-icon>
+  </mat-card-content>
+</mat-card>

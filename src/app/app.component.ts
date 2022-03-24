@@ -1,37 +1,112 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+} from 'rxjs';
+import { ApiService, Task, TaskDetail } from './services/api.service';
+import { SnackbarService } from './services/snackbar.service';
+import { CurrentTask, TaskService } from './services/task.service';
 import { TaskDialogComponent } from './task-dialog/task-dialog.component';
-
-export interface Task {
-  description: string;
-  duration: number;
-}
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  title = 'todo-app';
-  task: Task | null = null;
+  // Task filters
+  filter: 'ALL' | 'PENDING' | 'COMPLETED' = 'ALL';
+  sortBy: 'desc' | 'date' | 'duration' | 'delay' | 'status' = 'desc';
+  orderAsc = true;
+  search = '';
 
-  constructor(public dialog: MatDialog) {}
+  // View flags
+  savingTask = false;
+  searchingList = false;
+
+  // Task list to display
+  list$!: Observable<TaskDetail[]>;
+  private searchTerms = new Subject<string>();
+
+  constructor(
+    public dialog: MatDialog,
+    private api: ApiService,
+    private taskService: TaskService,
+    private snackbar: SnackbarService
+  ) {}
 
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
+    this.refreshList(); // Get task list
+    this.list$ = this.searchTerms.pipe(
+      // wait 500ms after each keystroke before considering the term
+      debounceTime(500),
+
+      // ignore new term if same as previous term
+      distinctUntilChanged(),
+
+      // switch to new search observable each time the term changes
+      switchMap((term: string) => this.taskService.localSearch(term))
+    );
+    this.list$.subscribe();
   }
 
-  openDialog(): void {
+  refreshList() {
+    this.searchingList = true;
+    this.api.consultList(this.filter, this.sortBy, this.orderAsc ? "ASC" : "DESC").subscribe({
+      next: (list => {
+        this.list$ = of(this.taskService.mapList(list)); // Map new list
+        this.search = ''; // Clean search input
+        this.snackbar.open('Lista actualizada', 'OK', 1500);
+      }),
+      complete: () => this.searchingList = false
+    });
+  }
+
+  // Clear box of search
+  clearInput(): void {
+    this.search = '';
+    this.searchTask('');
+  }
+
+  // Push a search term into the observable stream.
+  searchTask(term: string): void {
+    this.searchTerms.next(term);
+  }
+
+  // Open modal and save new task
+  recordNewTask(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
+      // Open dialog
       width: '300px',
-      data: { description: "Descripción", duration: 120 }
+      data: { id: null, task: { desc: '', duration: 1 } },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log({result});
-      this.task = result;
+    dialogRef.afterClosed().subscribe((result: Task) => {
+      // If user select save button => send request to save task
+      if (result !== undefined) {
+        this.savingTask = true;
+        this.api.saveNewTask(result).subscribe({
+          next: (res) => {
+            // Add to list just if filter COMPLETED is inactive
+            if (res.status === 201 && this.filter !== 'COMPLETED') {
+              this.list$ = of(this.taskService.addTask(res.body!));
+              this.search = ''; // Clean search input
+              this.snackbar.open('Tarea registrada', 'LISTO', 5000);
+              // TODO: Add task to pending list
+            }
+          },
+          complete: () => (this.savingTask = false),
+        });
+      }
     });
   }
 
+  get currentTasks(): CurrentTask[] {
+    return this.taskService.current;
+  }
 }

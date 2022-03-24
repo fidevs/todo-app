@@ -1,0 +1,32 @@
+mat-card {
+  padding: 5px;
+  max-width: 300px;
+  min-width: 250px;
+  margin-bottom: 5px;
+  background-color: rgb(226, 241, 136);
+}
+
+mat-card mat-card-title {
+  font-size: 12px;
+}
+
+mat-card mat-card-subtitle {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-around;
+}
+
+mat-card mat-card-subtitle mat-icon {
+  font-size: 18px;
+}
+
+mat-card mat-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+span {
+  font-size: 10px;
+  font-weight: bold;
+}

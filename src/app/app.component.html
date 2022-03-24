@@ -1,12 +1,12 @@
-<app-current-task></app-current-task>
+<app-current-task *ngIf="currentTasks.length > 0"></app-current-task>
 
 <div class="container">
   <div id="task-list-container">
     <div id="tool-bar">
       <mat-form-field appearance="legacy">
         <mat-label>Filtrar por estatus</mat-label>
-        <mat-select>
-          <mat-option [value]="null">Todas</mat-option>
+        <mat-select [(ngModel)]="filter">
+          <mat-option value="ALL">Todas</mat-option>
           <mat-option value="PENDING">Pendientes</mat-option>
           <mat-option value="COMPLETED">Completadas</mat-option>
         </mat-select>
@@ -15,7 +15,7 @@
       <div class="sort-section">
         <mat-form-field appearance="legacy">
           <mat-label>Ordenar por</mat-label>
-          <mat-select>
+          <mat-select [(ngModel)]="sortBy">
             <mat-option value="desc">Descripción</mat-option>
             <mat-option value="date">Fecha de finalización</mat-option>
             <mat-option value="duration">Duración</mat-option>
@@ -23,57 +23,75 @@
             <mat-option value="status">Estado</mat-option>
           </mat-select>
         </mat-form-field>
-        <button mat-icon-button>
-          <mat-icon>vertical_align_bottom</mat-icon>
+        <button mat-icon-button (click)="this.orderAsc = !this.orderAsc">
+          <mat-icon>{{
+            orderAsc ? "vertical_align_top" : "vertical_align_bottom"
+          }}</mat-icon>
         </button>
       </div>
 
       <mat-form-field class="example-form-field" appearance="legacy">
         <mat-label>Buscar tarea</mat-label>
-        <input matInput type="text" />
-        <button matSuffix mat-icon-button aria-label="Clear">
+        <input
+          #searchBox
+          [(ngModel)]="search"
+          matInput
+          type="text"
+          (input)="searchTask(searchBox.value)"
+        />
+        <button
+          *ngIf="searchBox.value"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearInput()"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
       <button
+        *ngIf="!savingTask"
         mat-icon-button
         style="color: rgb(39, 112, 155)"
         matTooltip="Registrar tarea"
-        (click)="openDialog()"
+        (click)="recordNewTask()"
       >
         <mat-icon>add_circle</mat-icon>
       </button>
+
+      <div *ngIf="savingTask" style="margin-top: auto; margin-bottom: auto">
+        <mat-progress-spinner
+          diameter="20"
+          color="primary"
+          mode="indeterminate"
+        >
+        </mat-progress-spinner>
+      </div>
+
+      <button
+        *ngIf="!searchingList"
+        mat-icon-button
+        style="color: rgb(0, 0, 0)"
+        matTooltip="Actualizar lista de tareas"
+        (click)="refreshList()"
+      >
+        <mat-icon>sync</mat-icon>
+      </button>
+
+      <div *ngIf="searchingList" style="margin-top: auto; margin-bottom: auto">
+        <mat-progress-spinner
+          diameter="20"
+          color="primary"
+          mode="indeterminate"
+        >
+        </mat-progress-spinner>
+      </div>
     </div>
     <div id="task-list">
-      <mat-card>
-        <mat-card-title>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
-          obcaecati natus, quisquam sus.
-        </mat-card-title>
-        <mat-card-subtitle>
-          <div class="estimated"><mat-icon>watch_later</mat-icon>120min</div>
-          <div class="time-delay"><mat-icon>sports_score</mat-icon><span>2022-22-22 24:24:24.555</span> (125min)</div>
-        </mat-card-subtitle>
-        <mat-card-content>
-          <button mat-icon-button style="color: red" matTooltip="Borrar">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Editar">
-            <mat-icon>edit_calendar</mat-icon>
-          </button>
-          <button mat-icon-button style="color: green" matTooltip="Iniciar">
-            <mat-icon>start</mat-icon>
-          </button>
-          <!-- <mat-icon style="color: rgb(39, 112, 155)" matTooltip="Completada">
-            assignment_turned_in
-          </mat-icon> -->
-        </mat-card-content>
-      </mat-card>
+      <app-task *ngFor="let task of list$ | async" [task]="task" ></app-task>
     </div>
   </div>
-
-
 
   <app-pending-task></app-pending-task>
 </div>
