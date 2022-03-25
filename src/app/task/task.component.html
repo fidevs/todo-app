@@ -24,6 +24,7 @@
 
     <app-spinner *ngIf="updating"></app-spinner>
     <button
+      (click)="update()"
       *ngIf="task.status === 'PENDING' && !updating"
       mat-icon-button
       matTooltip="Editar"

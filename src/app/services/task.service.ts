@@ -29,8 +29,16 @@ export class TaskService {
     return this.taskList;
   }
 
-  removeTask(id: string): TaskDetail[] {
+  removeTask(id: string): TaskDetail[] { // Remove task from list
     this.taskList = this.taskList.filter(task => task.id !== id);
+    return this.taskList;
+  }
+
+  updateTask(updatedTask: TaskDetail): TaskDetail[] { // Update task from list
+    this.taskList = [
+      ...this.taskList.filter(task => task.id !== updatedTask.id),
+      updatedTask
+    ];
     return this.taskList;
   }
 
@@ -38,6 +46,7 @@ export class TaskService {
     const results: TaskDetail[] = term === ""
       ? this.taskList
       : this.taskList.filter(item => item.desc.toLowerCase().indexOf(term.toLowerCase()) !== -1);
+    console.log({results});
     return of(results);
   }
 

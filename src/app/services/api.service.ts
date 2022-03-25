@@ -15,32 +15,47 @@ export interface TaskDetail {
   duration: number;
   finalDate: string | null;
   delay: number;
-  status: "COMPLETED" | "PENDING";
+  status: 'COMPLETED' | 'PENDING';
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  saveNewTask(task: Task): Observable<HttpResponse<TaskDetail>> { // Record new task in DB
-    console.log("Saving new task: ", task);
-    return this.http.post<TaskDetail>(`${env.apiUrl}/task`, task, { observe: 'response' });
+  saveNewTask(task: Task): Observable<HttpResponse<TaskDetail>> {
+    // Record new task in DB
+    console.log('Saving new task: ', task);
+    return this.http.post<TaskDetail>(`${env.apiUrl}/task`, task, {
+      observe: 'response',
+    });
   }
 
-  consultList(status: string, orderBy: string, order: string): Observable<TaskDetail[]> { // Filter and sort task list
-    console.log("Consulting task list"); // Configure request params
-    const params: HttpParams = new HttpParams().set("orderBy", orderBy).set("order", order);
-    status !== "ALL" && params.set("status", status);
+  consultList(
+    status: string,
+    orderBy: string,
+    order: string
+  ): Observable<TaskDetail[]> {
+    // Filter and sort task list
+    console.log('Consulting task list by status: ', status); // Configure request params
+    const params: HttpParams = new HttpParams()
+      .set('orderBy', orderBy)
+      .set('order', order)
+      .set('status', status);
 
     return this.http.get<TaskDetail[]>(`${env.apiUrl}/task`, { params });
   }
 
-  removeTask(id: string): Observable<TaskDetail> { // Mark task as delete
-    console.log("Delete task");
-    return this.http.delete<TaskDetail>(`${env.apiUrl}/task/${id}/status`);
+  updateTask(id: string, task: Task): Observable<TaskDetail> {
+    // Update task details
+    console.log('Update task');
+    return this.http.put<TaskDetail>(`${env.apiUrl}/task/${id}`, task);
   }
 
+  removeTask(id: string): Observable<TaskDetail> {
+    // Mark task as delete
+    console.log('Delete task');
+    return this.http.delete<TaskDetail>(`${env.apiUrl}/task/${id}/status`);
+  }
 }
