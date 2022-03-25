@@ -1,15 +1,4 @@
-.current-task-container {
-  display: flex;
-  overflow: auto;
-  white-space: nowrap;
-  padding: 10px;
-  background-color: rgb(39, 112, 155);
-  border-radius: 5px;
-  margin: 5px;
-  justify-content: space-around;
-}
-
-.current-task-container .current-task {
+.current-task {
   max-width: 300px;
   min-width: 300px;
   width: 100%;
@@ -20,17 +9,17 @@
   padding-bottom: 5px;
 }
 
-.current-task-container .current-task mat-card-title {
+.current-task mat-card-title {
   text-overflow: ellipsis;
   overflow: hidden;
   font-size: 20px;
 }
 
-.current-task-container .current-task mat-card-subtitle {
+.current-task mat-card-subtitle {
   margin: 0;
 }
 
-.current-task-container .current-task .estimated-time {
+.current-task .estimated-time {
   display: flex;
   align-items: baseline;
   border-bottom: 1px solid;
@@ -38,25 +27,25 @@
   margin-bottom: 5px;
 }
 
-.current-task-container .current-task .estimated-time mat-icon {
+.current-task .estimated-time mat-icon {
   font-size: 15px;
   color: rgb(143, 143, 143);
 }
 
-.current-task-container .current-task .current-task-footer {
+.current-task .current-task-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.current-task-container .current-task .current-task-footer .time-icon {
+.current-task .current-task-footer .time-icon {
   color: rgb(39, 112, 155);
 }
 
-.current-task-container .current-task .current-task-footer button {
+.current-task .current-task-footer button {
   min-width: 1%;
 }
 
-.current-task-container .current-task .current-task-footer .check-icon {
+.current-task .current-task-footer .check-icon {
   color: green;
 }

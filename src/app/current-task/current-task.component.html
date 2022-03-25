@@ -1,28 +1,31 @@
-<div class="current-task-container">
-  <mat-card class="current-task">
-    <mat-card-title>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eveniet,
-      molestiae.
-    </mat-card-title>
-    <div class="estimated-time">
-      <mat-icon>watch_later</mat-icon>
-      <mat-card-subtitle>Estimado: 120 minutos</mat-card-subtitle>
+<mat-card class="current-task">
+  <mat-card-title>
+    {{task.desc}}
+  </mat-card-title>
+  <div class="estimated-time">
+    <mat-icon>watch_later</mat-icon>
+    <mat-card-subtitle>Estimado: {{task.duration}} minutos</mat-card-subtitle>
+  </div>
+  <div class="current-task-footer">
+    <div style="display: flex; align-items: center;">
+      <mat-icon class="time-icon">timelapse</mat-icon>
+    <span>{{minutes | number:'2.0-0'}}:{{seconds | number:'2.0-0'}}</span>
     </div>
-    <div class="current-task-footer">
-      <div style="display: flex; align-items: center;">
-        <mat-icon class="time-icon">timelapse</mat-icon>
-      <span>10:35</span>
-      </div>
-      <button mat-icon-button color="warn" matTooltip="Reiniciar">
-        <mat-icon>replay_circle_filled</mat-icon>
-      </button>
-      <button mat-icon-button matTooltip="Pausar">
-        <!-- play_circle_filled -->
-        <mat-icon>pause_circle_filled</mat-icon>
-      </button>
-      <button mat-icon-button class="check-icon" matTooltip="Marcar como completada">
-        <mat-icon>check_circle</mat-icon>
-      </button>
-    </div>
-  </mat-card>
-</div>
+    <button (click)="restartCounter()" mat-icon-button color="warn" matTooltip="Reiniciar">
+      <mat-icon>replay_circle_filled</mat-icon>
+    </button>
+    <button (click)="toggleCounter()" mat-icon-button [matTooltip]="task.running ? 'Pausar' : 'Activar'">
+      <mat-icon>{{task.running ? 'pause_circle_filled' : 'play_circle_filled'}}</mat-icon>
+    </button>
+    <app-spinner *ngIf="loading"></app-spinner>
+    <button
+      (click)="done()"
+      *ngIf="!loading"
+      mat-icon-button
+      class="check-icon"
+      matTooltip="Marcar como completada"
+    >
+      <mat-icon>check_circle</mat-icon>
+    </button>
+  </div>
+</mat-card>

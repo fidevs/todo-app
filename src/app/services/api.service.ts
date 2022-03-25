@@ -53,6 +53,13 @@ export class ApiService {
     return this.http.put<TaskDetail>(`${env.apiUrl}/task/${id}`, task);
   }
 
+  completeTask(id: string, delay: number): Observable<TaskDetail> {
+    // Mark task as completed
+    console.log("Complete task");
+    const params: HttpParams = new HttpParams().set('delay', delay);
+    return this.http.put<TaskDetail>(`${env.apiUrl}/task/${id}/status`, null, { params });
+  }
+
   removeTask(id: string): Observable<TaskDetail> {
     // Mark task as delete
     console.log('Delete task');

@@ -33,6 +33,7 @@
     </button>
 
     <button
+      (click)="startTask()"
       *ngIf="task.status === 'PENDING'"
       mat-icon-button
       style="color: green"

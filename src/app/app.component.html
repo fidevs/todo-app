@@ -1,4 +1,11 @@
-<app-current-task *ngIf="currentTasks.length > 0"></app-current-task>
+<div class="current-task-container" *ngIf="currentTasks.length > 0">
+  <app-current-task
+    [task]="task"
+    (mapTask)="mapCompletedTask($event)"
+    *ngFor="let task of currentTasks"
+  >
+  </app-current-task>
+</div>
 
 <div class="container">
   <div id="task-list-container">
@@ -67,7 +74,7 @@
         mat-icon-button
         style="color: rgb(0, 0, 0)"
         matTooltip="Actualizar lista de tareas"
-        (click)="refreshList()"
+        (click)="refreshList(false)"
       >
         <mat-icon>sync</mat-icon>
       </button>
@@ -83,5 +90,5 @@
     </div>
   </div>
 
-  <app-pending-task></app-pending-task>
+  <app-pending-task (updateList)="loadListManually($event)"></app-pending-task>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   debounceTime,
@@ -41,7 +41,8 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.refreshList(); // Get task list
+    this.taskService.loadCurrentTaskBackup();
+    this.refreshList(true); // Get task list
     this.list$ = this.searchTerms.pipe(
       // wait 500ms after each keystroke before considering the term
       debounceTime(500),
@@ -55,11 +56,11 @@ export class AppComponent implements OnInit {
     this.list$.subscribe();
   }
 
-  refreshList() { // Consult task list in server
+  refreshList(firstLoad: boolean) { // Consult task list in server
     this.searchingList = true;
     this.api.consultList(this.filter, this.sortBy, this.orderAsc ? "ASC" : "DESC").subscribe({
       next: (list => {
-        this.list$ = of(this.taskService.mapList(list)); // Map new list
+        this.list$ = of(this.taskService.mapList(list, firstLoad)); // Map new list
         this.search = ''; // Clean search input
         this.snackbar.open('Lista actualizada', 'OK', 1500);
       }),
@@ -111,7 +112,23 @@ export class AppComponent implements OnInit {
     });
   }
 
+  mapCompletedTask(task: TaskDetail): void {
+    console.log("mapCompletedTask");
+    if (this.filter !== 'PENDING') {
+      this.loadListManually(this.taskService.addTask(task));
+    }
+  }
+
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHandler() {
+    this.taskService.backupCurrentTask();
+  }
+
   get currentTasks(): CurrentTask[] {
     return this.taskService.current;
+  }
+
+  get pendingList(): TaskDetail[] {
+    return this.taskService.pendingList;
   }
 }

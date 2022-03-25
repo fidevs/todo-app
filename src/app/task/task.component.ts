@@ -61,4 +61,8 @@ export class TaskComponent {
     });
   }
 
+  startTask(): void { // Start task
+    this.updateList.emit(this.taskService.startTask(this.task));
+  }
+
 }

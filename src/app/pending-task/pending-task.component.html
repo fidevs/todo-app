@@ -1,11 +1,17 @@
 <div id="pending-container">
   <h3>Tareas pendientes</h3>
   <div id="pending-tasks">
-    <mat-card>
+    <mat-card *ngFor="let task of service.pendingList">
         <mat-card-subtitle>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Excepturi, sit.
+          {{task.desc}}
         </mat-card-subtitle>
-        <button mat-icon-button style="color: green;"><mat-icon>start</mat-icon></button>
+        <button
+          mat-icon-button
+          style="color: green;"
+          (click)="updateList.emit(service.startTask(task))"
+        >
+          <mat-icon>start</mat-icon>
+        </button>
     </mat-card>
   </div>
 </div>
