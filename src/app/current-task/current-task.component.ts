@@ -50,7 +50,7 @@ export class CurrentTaskComponent implements OnInit, OnDestroy {
 
   restartCounter(): void { // Restore and pause counter
     this.task.running = false;
-    this.subscription!.unsubscribe();
+    this.subscription?.unsubscribe();
     this.counter = 0;
     this.minutes = 0;
     this.seconds = 0;
