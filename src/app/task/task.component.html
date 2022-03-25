@@ -9,17 +9,28 @@
       <span>{{ task.finalDate }}</span> ({{ task.delay }}m)
     </div>
   </mat-card-subtitle>
+
   <mat-card-content>
-    <button mat-icon-button style="color: red" matTooltip="Borrar">
+    <app-spinner *ngIf="deleting"></app-spinner>
+    <button
+      (click)="delete()"
+      *ngIf="!deleting"
+      mat-icon-button
+      style="color: red"
+      matTooltip="Borrar"
+    >
       <mat-icon>delete</mat-icon>
     </button>
+
+    <app-spinner *ngIf="updating"></app-spinner>
     <button
-      *ngIf="task.status === 'PENDING'"
+      *ngIf="task.status === 'PENDING' && !updating"
       mat-icon-button
       matTooltip="Editar"
     >
       <mat-icon>edit_calendar</mat-icon>
     </button>
+
     <button
       *ngIf="task.status === 'PENDING'"
       mat-icon-button
@@ -28,6 +39,7 @@
     >
       <mat-icon>start</mat-icon>
     </button>
+
     <mat-icon
       *ngIf="task.status === 'COMPLETED'"
       style="color: rgb(39, 112, 155)"

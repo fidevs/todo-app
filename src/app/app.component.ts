@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
     this.list$.subscribe();
   }
 
-  refreshList() {
+  refreshList() { // Consult task list in server
     this.searchingList = true;
     this.api.consultList(this.filter, this.sortBy, this.orderAsc ? "ASC" : "DESC").subscribe({
       next: (list => {
@@ -63,8 +63,12 @@ export class AppComponent implements OnInit {
         this.search = ''; // Clean search input
         this.snackbar.open('Lista actualizada', 'OK', 1500);
       }),
+      error: () => this.searchingList = false,
       complete: () => this.searchingList = false
     });
+  }
+  loadListManually(list: TaskDetail[]): void {
+    this.list$ = of(list);
   }
 
   // Clear box of search
@@ -94,13 +98,14 @@ export class AppComponent implements OnInit {
           next: (res) => {
             // Add to list just if filter COMPLETED is inactive
             if (res.status === 201 && this.filter !== 'COMPLETED') {
-              this.list$ = of(this.taskService.addTask(res.body!));
+              this.loadListManually(this.taskService.addTask(res.body!));
               this.search = ''; // Clean search input
               this.snackbar.open('Tarea registrada', 'LISTO', 5000);
               // TODO: Add task to pending list
             }
           },
-          complete: () => (this.savingTask = false),
+          error: () => (this.savingTask = false),
+          complete: () => (this.savingTask = false)
         });
       }
     });

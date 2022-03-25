@@ -60,14 +60,7 @@
         <mat-icon>add_circle</mat-icon>
       </button>
 
-      <div *ngIf="savingTask" style="margin-top: auto; margin-bottom: auto">
-        <mat-progress-spinner
-          diameter="20"
-          color="primary"
-          mode="indeterminate"
-        >
-        </mat-progress-spinner>
-      </div>
+      <app-spinner *ngIf="savingTask"></app-spinner>
 
       <button
         *ngIf="!searchingList"
@@ -79,17 +72,14 @@
         <mat-icon>sync</mat-icon>
       </button>
 
-      <div *ngIf="searchingList" style="margin-top: auto; margin-bottom: auto">
-        <mat-progress-spinner
-          diameter="20"
-          color="primary"
-          mode="indeterminate"
-        >
-        </mat-progress-spinner>
-      </div>
+      <app-spinner *ngIf="searchingList"></app-spinner>
     </div>
     <div id="task-list">
-      <app-task *ngFor="let task of list$ | async" [task]="task" ></app-task>
+      <app-task
+        [task]="task"
+        *ngFor="let task of list$ | async"
+        (updateList)="loadListManually($event)"
+      ></app-task>
     </div>
   </div>
 

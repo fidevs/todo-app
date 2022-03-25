@@ -29,6 +29,11 @@ export class TaskService {
     return this.taskList;
   }
 
+  removeTask(id: string): TaskDetail[] {
+    this.taskList = this.taskList.filter(task => task.id !== id);
+    return this.taskList;
+  }
+
   localSearch(term: string): Observable<TaskDetail[]> {
     const results: TaskDetail[] = term === ""
       ? this.taskList

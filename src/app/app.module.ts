@@ -20,6 +20,7 @@ import { PendingTaskComponent } from './pending-task/pending-task.component';
 import { TaskDialogComponent } from './task-dialog/task-dialog.component';
 import { RequestInterceptor } from './interceptors/request.interceptor';
 import { TaskComponent } from './task/task.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { TaskComponent } from './task/task.component';
     CurrentTaskComponent,
     PendingTaskComponent,
     TaskDialogComponent,
-    TaskComponent
+    TaskComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
